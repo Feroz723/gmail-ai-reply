@@ -3,30 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gmail AI Reply Assistant — Reply 10x Faster</title>
+  <title>Gmail AI Reply Assistant — Draft Emails 10x Faster</title>
+  
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
+    /* Reset and Theme Variables */
     :root {
-      --bg-dark: #0b0f19;
-      --bg-card: #151b2c;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --accent: #3b82f6;
+      --bg-dark: #030712;
+      --bg-dark-accent: #0b0f19;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --primary: #3b82f6;
+      --primary-rgb: 59, 130, 246;
+      --secondary: #6366f1;
+      --accent: #10b981;
       --text-main: #f3f4f6;
       --text-muted: #9ca3af;
-      --border-color: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.08);
       --font-display: 'Outfit', sans-serif;
-      --font-body: 'Inter', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --glow-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -37,33 +46,48 @@
       overflow-x: hidden;
     }
 
-    /* Gradient Background Lights */
-    .bg-glow {
+    /* Ambient Background Glows */
+    .glow-spot-1 {
       position: absolute;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(11, 15, 25, 0) 70%);
-      top: -200px;
-      left: 50%;
-      transform: translateX(-50%);
+      width: 50vw;
+      height: 50vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(3, 7, 18, 0) 70%);
+      top: -10vw;
+      right: -10vw;
       z-index: -1;
       pointer-events: none;
     }
 
-    /* Container */
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
+    .glow-spot-2 {
+      position: absolute;
+      width: 60vw;
+      height: 60vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, rgba(3, 7, 18, 0) 70%);
+      top: 40%;
+      left: -20vw;
+      z-index: -1;
+      pointer-events: none;
     }
 
-    /* Header / Navbar */
+    /* Navigation */
     header {
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border-color);
+      width: 100%;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-light);
+      background-color: rgba(3, 7, 18, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    
+
     .nav-container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -71,153 +95,276 @@
 
     .logo {
       font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 22px;
+      font-weight: 800;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       text-decoration: none;
-    }
-
-    .logo span {
-      background: linear-gradient(135deg, #60a5fa, #2563eb);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .badge {
-      background: rgba(37, 99, 235, 0.15);
-      border: 1px solid rgba(37, 99, 235, 0.3);
-      color: #60a5fa;
-      padding: 4px 12px;
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 80px 0 60px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: 52px;
-      font-weight: 800;
-      line-height: 1.15;
-      max-width: 800px;
-      margin: 0 auto 24px;
-      color: #fff;
       letter-spacing: -0.02em;
     }
 
-    .hero h1 span {
-      background: linear-gradient(135deg, #93c5fd, #3b82f6);
+    .logo span {
+      background: linear-gradient(135deg, #60a5fa, var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 26px;
+    }
+
+    .nav-badge {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* Full-Width Section Base */
+    section {
+      width: 100%;
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero Section (Unique Split Layout) */
+    .hero-section {
+      padding: 80px 0 120px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      text-align: left;
+    }
+
+    .promo-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-light);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 14px;
+      color: #e5e7eb;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+
+    .promo-pill .highlight {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .hero-content h1 {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 4.5vw, 60px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-content h1 span {
+      background: linear-gradient(135deg, #93c5fd, #60a5fa, var(--secondary));
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .hero p {
-      font-size: 18px;
+    .hero-content p {
+      font-size: clamp(16px, 1.2vw, 19px);
       color: var(--text-muted);
-      max-width: 600px;
-      margin: 0 auto 36px;
+      margin-bottom: 40px;
+      max-width: 580px;
     }
 
-    /* Call To Action Buttons */
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
     .cta-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #fff;
-      padding: 16px 36px;
+      padding: 18px 38px;
       font-size: 16px;
-      font-weight: 600;
-      border-radius: 8px;
+      font-weight: 700;
+      border-radius: 10px;
       text-decoration: none;
-      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.35);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       border: none;
+      cursor: pointer;
     }
 
     .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px rgba(37, 99, 235, 0.45);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
     }
 
-    .cta-sub {
+    .cta-subtext {
       font-size: 13px;
       color: var(--text-muted);
-      margin-top: 12px;
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Demo Showcase Container */
-    .demo-container {
-      margin: 60px auto 0;
-      max-width: 850px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      background: var(--bg-card);
-      padding: 6px;
+    /* Mock Browser Frame for GIF (Fills full width of right column) */
+    .hero-visual {
+      position: relative;
     }
 
-    .demo-frame {
-      border-radius: 8px;
+    .browser-mockup {
+      background: #111827;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
       overflow: hidden;
-      display: block;
+      box-shadow: var(--glow-shadow), 0 30px 60px rgba(0, 0, 0, 0.6);
       width: 100%;
-      height: auto;
-      background-color: #111;
-      aspect-ratio: 16/10;
     }
 
-    /* Features Grid */
-    .features {
-      padding: 80px 0;
-      border-top: 1px solid var(--border-color);
+    .browser-header {
+      background: #1f2937;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .browser-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #ef4444;
+    }
+
+    .browser-dot:nth-child(2) { background-color: #f59e0b; }
+    .browser-dot:nth-child(3) { background-color: #10b981; }
+
+    .browser-address {
+      background: rgba(0, 0, 0, 0.3);
+      height: 24px;
+      flex-grow: 1;
+      margin-left: 20px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      padding-left: 12px;
+      font-family: monospace;
+    }
+
+    .browser-body {
+      position: relative;
+      background: #000;
+      width: 100%;
+      aspect-ratio: 16/10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .browser-body img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Features Section */
+    .features-section {
+      background-color: var(--bg-dark-accent);
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 32px;
-      margin-top: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
     }
 
     .feature-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 32px;
-      transition: border-color 0.2s, transform 0.2s;
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 40px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
 
     .feature-card:hover {
-      border-color: rgba(37, 99, 235, 0.4);
-      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    .feature-icon {
-      font-size: 32px;
-      margin-bottom: 20px;
-      display: block;
+    .feature-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: var(--primary);
+      margin-bottom: 24px;
     }
 
     .feature-card h3 {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: 700;
       color: #fff;
       margin-bottom: 12px;
     }
@@ -228,286 +375,430 @@
       line-height: 1.6;
     }
 
-    /* Installation Steps */
+    /* Installation Steps Section */
     .steps-section {
-      padding: 80px 0;
-      border-top: 1px solid var(--border-color);
-      background: rgba(21, 27, 44, 0.3);
+      padding: 100px 0;
     }
 
-    .section-title {
-      text-align: center;
-      font-family: var(--font-display);
-      font-size: 36px;
-      font-weight: 700;
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .step-card {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 30px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .step-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .step-badge {
+      position: absolute;
+      top: -20px;
+      left: 30px;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #fff;
-      margin-bottom: 50px;
-    }
-
-    .steps-list {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .step-item {
-      display: flex;
-      gap: 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      align-items: flex-start;
-    }
-
-    .step-number {
-      background: var(--primary);
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      width: 32px;
-      height: 32px;
+      font-weight: 800;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
     }
 
-    .step-content h4 {
+    .step-card h4 {
       font-family: var(--font-display);
       font-size: 18px;
+      font-weight: 700;
       color: #fff;
-      margin-bottom: 6px;
+      margin-top: 10px;
+      margin-bottom: 12px;
     }
 
-    .step-content p {
+    .step-card p {
       color: var(--text-muted);
       font-size: 14px;
+      line-height: 1.6;
     }
 
     /* Pricing Section */
-    .pricing {
-      padding: 80px 0;
-      border-top: 1px solid var(--border-color);
-      text-align: center;
+    .pricing-section {
+      background-color: var(--bg-dark-accent);
+      border-top: 1px solid var(--border-light);
+    }
+
+    .pricing-wrapper {
+      max-width: 500px;
+      margin: 0 auto;
     }
 
     .pricing-card {
-      background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1) 0%, rgba(21, 27, 44, 1) 100%);
-      border: 2px solid rgba(37, 99, 235, 0.3);
-      border-radius: 16px;
-      max-width: 450px;
-      margin: 40px auto 0;
-      padding: 48px 32px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.15) 0%, rgba(17, 24, 39, 0.9) 100%);
+      border: 2px solid rgba(59, 130, 246, 0.4);
+      border-radius: 24px;
+      padding: 60px 40px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      position: relative;
     }
 
-    .pricing-name {
+    .pricing-badge {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--bg-dark);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 20px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .plan-title {
       font-family: var(--font-display);
       font-size: 24px;
-      font-weight: 700;
+      font-weight: 800;
       color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
       margin-bottom: 8px;
     }
 
-    .pricing-price {
-      font-family: var(--font-display);
-      font-size: 48px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 24px;
-    }
-
-    .pricing-price span {
-      font-size: 16px;
-      font-weight: 500;
+    .price span {
+      font-size: 18px;
       color: var(--text-muted);
+      font-weight: 500;
     }
 
     .pricing-features {
       list-style: none;
       text-align: left;
-      max-width: 280px;
-      margin: 0 auto 36px;
+      margin: 40px auto;
+      max-width: 320px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
     .pricing-features li {
       font-size: 15px;
-      color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .pricing-features li::before {
       content: "✓";
-      color: #3b82f6;
+      color: var(--accent);
       font-weight: bold;
+      font-size: 16px;
     }
 
     /* FAQ Section */
-    .faq {
-      padding: 80px 0;
-      border-top: 1px solid var(--border-color);
+    .faq-section {
+      border-top: 1px solid var(--border-light);
     }
 
-    .faq-list {
-      max-width: 750px;
-      margin: 40px auto 0;
+    .faq-grid {
+      max-width: 800px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
 
-    .faq-item {
+    .faq-card {
       background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 24px;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 30px;
+      transition: all 0.2s ease;
     }
 
-    .faq-item h4 {
+    .faq-card h4 {
       font-family: var(--font-display);
-      font-size: 17px;
+      font-size: 18px;
+      font-weight: 700;
       color: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    .faq-item p {
+    .faq-card p {
       color: var(--text-muted);
-      font-size: 14.5px;
+      font-size: 15px;
+      line-height: 1.6;
     }
 
     /* Footer */
     footer {
-      padding: 40px 0;
-      border-top: 1px solid var(--border-color);
+      background-color: #020617;
+      padding: 60px 0;
+      border-top: 1px solid var(--border-light);
       text-align: center;
+    }
+
+    footer p {
       color: var(--text-muted);
       font-size: 14px;
     }
 
-    /* Mobile Responsive Settings */
+    /* Responsive Media Queries (Mobile, Tablet, Desktop) */
+    
+    /* Widescreen & Desktop View scaling */
+    @media (min-width: 1440px) {
+      .section-container, .nav-container {
+        max-width: 1360px;
+      }
+    }
+
+    /* Tablet View (max-width: 1024px) */
+    @media (max-width: 1024px) {
+      section {
+        padding: 80px 0;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+        text-align: center;
+      }
+
+      .hero-content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-content p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .cta-group {
+        align-items: center;
+        width: 100%;
+      }
+
+      .browser-mockup {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+    }
+
+    /* Mobile View (max-width: 768px) */
     @media (max-width: 768px) {
-      .hero h1 {
+      section {
+        padding: 60px 0;
+      }
+
+      .hero-section {
+        padding: 40px 0 80px;
+      }
+
+      .nav-container {
+        padding: 0 16px;
+      }
+
+      .section-container {
+        padding: 0 16px;
+      }
+
+      .hero-content h1 {
         font-size: 38px;
+        margin-bottom: 16px;
       }
-      
-      .hero p {
-        font-size: 16px;
+
+      .feature-card {
+        padding: 30px;
       }
-      
-      .section-title {
-        font-size: 28px;
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .step-card {
+        padding-top: 36px;
+      }
+
+      .pricing-card {
+        padding: 40px 24px;
+      }
+    }
+
+    /* Extra Small Devices (max-width: 480px) */
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: 32px;
+      }
+
+      .cta-btn {
+        width: 100%;
+        padding: 16px 20px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .nav-badge {
+        font-size: 11px;
+        padding: 4px 10px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background decorative light glow -->
-  <div class="bg-glow"></div>
+  <!-- Decorative background glows -->
+  <div class="glow-spot-1"></div>
+  <div class="glow-spot-2"></div>
 
   <!-- Header -->
   <header>
-    <div class="container nav-container">
+    <div class="nav-container">
       <a href="#" class="logo">
         <span>✦</span> Gmail AI Reply
       </a>
-      <div class="badge">Chrome Extension</div>
+      <div class="nav-badge">Chrome Extension</div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1>Reply to Gmail Emails <span>10x Faster</span> With AI</h1>
-      <p>Generate 3 contextual reply suggestions (Professional, Friendly, and Brief) directly in Gmail. Keep your workflows fast, efficient, and private.</p>
-      
-      <!-- REPLACE href WITH YOUR DODO PAYMENTS CHECKOUT LINK -->
-      <a href="YOUR_DODO_PAYMENTS_CHECKOUT_URL" class="cta-btn" target="_blank">
-        Get AI Reply Assistant — $9/mo
-      </a>
-      <span class="cta-sub">Instant delivery. Cancel anytime.</span>
+  <section class="hero-section">
+    <div class="section-container">
+      <div class="hero-grid">
+        
+        <!-- Left Side: Copy and call to action -->
+        <div class="hero-content">
+          <div class="promo-pill">
+            <span class="highlight">NEW V1.0</span> Bring Your Own Key (BYOK)
+          </div>
+          <h1>Draft Gmail Replies <span>10x Faster</span> With Llama 3.3</h1>
+          <p>Instantly generate three high-quality drafts (Professional, Friendly, and Brief) right inside Gmail. Powered by cutting-edge AI directly in your browser.</p>
+          
+          <div class="cta-group">
+            <!-- REPLACE HREF WITH YOUR CHECKOUT LINK -->
+            <a href="YOUR_DODO_PAYMENTS_CHECKOUT_URL" class="cta-btn" target="_blank">
+              Get AI Reply Assistant — $9/mo
+            </a>
+            <div class="cta-subtext">
+              🔒 Instant Delivery • Cancel Anytime • Secure Checkout
+            </div>
+          </div>
+        </div>
 
-      <!-- Showcase Image/GIF of the extension in action -->
-      <div class="demo-container">
-        <!-- REPLACE src="Animation.gif" WITH YOUR RECORDED SCREENSHOT/GIF -->
-        <img class="demo-frame" src="Animation.gif" alt="Gmail AI Reply Assistant Demo">
+        <!-- Right Side: GIF Preview in a Browser Wrapper -->
+        <div class="hero-visual">
+          <div class="browser-mockup">
+            <div class="browser-header">
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-address">gmail.com/inbox</div>
+            </div>
+            <div class="browser-body">
+              <img src="Animation.gif" alt="Gmail AI Reply Assistant Demo GIF">
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
   <!-- Features Section -->
-  <section class="features">
-    <div class="container">
-      <h2 class="section-title">Why Use AI Reply Assistant?</h2>
+  <section class="features-section" id="features">
+    <div class="section-container">
+      
+      <div class="section-header">
+        <h2>Features built for busy professionals</h2>
+        <p>Drafting emails doesn't have to be a chore. AI Reply helps you stay productive while keeping your workspace secure.</p>
+      </div>
+
       <div class="features-grid">
         
+        <!-- Feature 1 -->
         <div class="feature-card">
-          <span class="feature-icon">🔒</span>
-          <h3>100% Privacy-First</h3>
-          <p>We don't run any backend servers. Your emails are sent directly from your browser to Groq. We never see, track, or save your data.</p>
+          <div class="feature-icon-wrapper">🔒</div>
+          <h3>Zero Server Privacy</h3>
+          <p>Unlike standard extensions, your emails never touch third-party backend servers. All data runs directly from your browser to Groq, protecting corporate data.</p>
         </div>
 
+        <!-- Feature 2 -->
         <div class="feature-card">
-          <span class="feature-icon">⚡</span>
-          <h3>Three Tailored Choices</h3>
-          <p>Get a Professional response for business, a Friendly response for casual replies, and a Brief response for quick answers—all in one click.</p>
+          <div class="feature-icon-wrapper">⚡</div>
+          <h3>Three Clear Perspectives</h3>
+          <p>Get a formal response for clients, a conversational one for teammates, and a short message for updates—all in a single click.</p>
         </div>
 
+        <!-- Feature 3 -->
         <div class="feature-card">
-          <span class="feature-icon">⚙️</span>
-          <h3>Bring Your Own Key</h3>
-          <p>Runs on your own free Groq API key. You pay $0 for AI tokens, and you get access to lightning-fast models like Llama 3.3.</p>
+          <div class="feature-icon-wrapper">⚙️</div>
+          <h3>Zero Inference Markup</h3>
+          <p>Provide your own free Groq API key and pay $0 for token usage. Use state-of-the-art open source models (like Llama 3.3 70B) for free.</p>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- Step-by-Step Installation Guide -->
+  <!-- Installation Steps -->
   <section class="steps-section">
-    <div class="container">
-      <h2 class="section-title">How To Install (Takes 2 Minutes)</h2>
-      <div class="steps-list">
+    <div class="section-container">
+      
+      <div class="section-header">
+        <h2>Simple 2-Minute Installation</h2>
+        <p>No coding experience required. Follow these steps to get set up immediately.</p>
+      </div>
+
+      <div class="steps-grid">
         
-        <div class="step-item">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h4>Download and Unzip</h4>
-            <p>Purchase the extension and download the .zip file to your computer. Extract it into a regular folder.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-badge">1</div>
+          <h4>Download and Extract</h4>
+          <p>Purchase the extension and download the .zip file. Right-click and extract it into a normal folder on your desktop.</p>
         </div>
 
-        <div class="step-item">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h4>Load Into Chrome</h4>
-            <p>Open <code>chrome://extensions</code> in Chrome. Turn on <strong>Developer Mode</strong> (top right), click <strong>Load Unpacked</strong>, and select the folder.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-badge">2</div>
+          <h4>Load into Chrome</h4>
+          <p>Visit <code>chrome://extensions</code>. Toggle <strong>Developer Mode</strong> on (top-right), click <strong>Load Unpacked</strong>, and select the folder.</p>
         </div>
 
-        <div class="step-item">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h4>Save Settings & API Key</h4>
-            <p>Pin the extension icon to your toolbar. Paste your product license key, along with a free Groq API key from console.groq.com.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-badge">3</div>
+          <h4>Add API & License Key</h4>
+          <p>Pin the extension icon to your toolbar. Paste your purchase license key and your free API key from console.groq.com.</p>
         </div>
 
-        <div class="step-item">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h4>Click and Reply!</h4>
-            <p>Open Gmail, click Reply on any message, click the new <strong>✦ AI Reply</strong> button, choose your draft, and send.</p>
-          </div>
+        <div class="step-card">
+          <div class="step-badge">4</div>
+          <h4>Reply and Send</h4>
+          <p>Open Gmail, click Reply, click the <strong>✦ AI Reply</strong> button, click "Use this reply" on your choice, and send!</p>
         </div>
 
       </div>
@@ -515,46 +806,60 @@
   </section>
 
   <!-- Pricing -->
-  <section class="pricing">
-    <div class="container">
-      <h2 class="section-title">Simple Pricing</h2>
-      <div class="pricing-card">
-        <div class="pricing-name">AI Reply Assistant Pro</div>
-        <div class="pricing-price">$9<span>/month</span></div>
-        <ul class="pricing-features">
-          <li>Unlimited email replies</li>
-          <li>3 instant reply styles</li>
-          <li>Custom background/persona</li>
-          <li>Direct browser API speed</li>
-          <li>Priority lifetime updates</li>
-        </ul>
-        <!-- REPLACE href WITH YOUR DODO PAYMENTS CHECKOUT LINK -->
-        <a href="YOUR_DODO_PAYMENTS_CHECKOUT_URL" class="cta-btn" style="width: 100%;" target="_blank">
-          Purchase Extension
-        </a>
+  <section class="pricing-section">
+    <div class="section-container">
+      
+      <div class="section-header">
+        <h2>Simple Lifetime Value</h2>
+        <p>A small price to save hours of drafting every single week.</p>
       </div>
+
+      <div class="pricing-wrapper">
+        <div class="pricing-card">
+          <div class="pricing-badge">Save Hours Daily</div>
+          <div class="plan-title">AI Reply Assistant Pro</div>
+          <div class="price">$9<span>/month</span></div>
+          <ul class="pricing-features">
+            <li>Unlimited email drafts</li>
+            <li>Professional, Friendly, & Brief replies</li>
+            <li>Custom background & persona</li>
+            <li>Fast local browser inference</li>
+            <li>Priority updates & features</li>
+          </ul>
+          <!-- REPLACE HREF WITH YOUR CHECKOUT LINK -->
+          <a href="YOUR_DODO_PAYMENTS_CHECKOUT_URL" class="cta-btn" style="width: 100%;" target="_blank">
+            Get Instant Access
+          </a>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="faq">
-    <div class="container">
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      <div class="faq-list">
+  <section class="faq-section">
+    <div class="section-container">
+      
+      <div class="section-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Clear details about keys, licenses, and security.</p>
+      </div>
+
+      <div class="faq-grid">
         
-        <div class="faq-item">
+        <div class="faq-card">
           <h4>How does the free Groq API key work?</h4>
-          <p>Groq provides ultra-fast AI processing. Anyone can sign up for free at console.groq.com and receive a free API key with a daily rate allowance that is more than enough for regular emailing. No credit card is required.</p>
+          <p>Groq is an ultra-fast AI provider. Anyone can sign up at console.groq.com and receive a free API key instantly. Groq provides generous free usage limits which are more than enough to reply to hundreds of emails per day without inputting a credit card.</p>
         </div>
 
-        <div class="faq-item">
-          <h4>Is my email data secure?</h4>
-          <p>Absolutely. The extension runs entirely inside your browser. It sends requests directly to the Groq API using your personal key. It does not send data to any other third-party servers.</p>
+        <div class="faq-card">
+          <h4>Is my corporate or private email secure?</h4>
+          <p>Yes. The extension communicates directly between your web browser and Groq. We do not use intermediary databases or API servers, meaning we cannot store, read, or track any of your emails.</p>
         </div>
 
-        <div class="faq-item">
-          <h4>What if I need to cancel my subscription?</h4>
-          <p>You can cancel your subscription at any time through the billing link sent to your email after purchase. You will retain access to the extension until the end of your billing cycle.</p>
+        <div class="faq-card">
+          <h4>How do I cancel my subscription?</h4>
+          <p>You can cancel instantly through your customer billing portal linked inside your email receipt. You will keep accessing the extension until the current billing month ends.</p>
         </div>
 
       </div>
@@ -563,7 +868,7 @@
 
   <!-- Footer -->
   <footer>
-    <div class="container">
+    <div class="section-container">
       <p>&copy; 2026 Gmail AI Reply Assistant. All rights reserved.</p>
     </div>
   </footer>
